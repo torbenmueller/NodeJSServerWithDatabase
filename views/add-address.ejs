@@ -1,0 +1,19 @@
+<%- include("header") -%>
+
+<div class="box" id="heading">
+    <h1>Add a New Address</h1>
+</div>
+
+<form class="newAddress" action="/" method="post">
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control mb-3" name="newName" autocomplete="off">
+        <label>Phone Number</label>
+        <input type="number" class="form-control mb-3" name="newNumber" autocomplete="off">
+        <div class="row justify-content-center">
+            <button type="submit" name="address-list" class="btn btn-success">Submit</button>
+        </div>
+    </div>
+</form>
+
+<%- include("footer") -%>
