@@ -42,6 +42,7 @@ app.post("/", function(req, res) {
         name: name,
         phone: phone
     };
+    
     addresses.push(newEntry);
     index++;
     res.redirect("/");
