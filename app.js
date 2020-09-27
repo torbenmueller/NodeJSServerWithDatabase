@@ -1,5 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
+const mongoose = require('mongoose');
+mongoose.connect('mongodb+srv://new-user:test123@cluster0.76fy5.mongodb.net/addressesDB?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.set('useFindAndModify', false);
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -9,23 +14,18 @@ app.use(express.static("public"));
 
 const port = 3000;
 
-const addresses = [
-    {
-        id: 0,
-        name: "Max Mustermann",
-        phone: 1234567890
-    }
-];
-
-let index = 1;
+const addressSchema = new mongoose.Schema ({
+    name: String,
+    phone: Number
+  });
+  
+const Address = mongoose.model("Address", addressSchema);
 
 // Get methods
 app.get("/", (req, res) => {
-    res.render("home", {addressList: addresses});
-});
-
-app.get("/add-address", (req, res) => {
-    res.render("add-address");
+    Address.find({}, function(err, addresses) {
+        res.render("home", {addresses: addresses});
+    });
 });
 
 
@@ -33,34 +33,35 @@ app.get("/add-address", (req, res) => {
 // Post methods
 app.post("/", function(req, res) {
 
-    const id = index;
-    const name = req.body.newName;
-    const phone = req.body.newNumber;
+    const address = new Address ({
+        name: req.body.newName,
+        phone: req.body.newNumber
+    });
 
-    const newEntry = {
-        id: id,
-        name: name,
-        phone: phone
-    };
-    
-    addresses.push(newEntry);
-    index++;
-    res.redirect("/");
+    address.save(function(err) {
+        if (!err) {
+            res.redirect("/");
+        }
+    });
     
 });
 
 app.post("/delete", function(req, res) {
     const addressId = req.body.addressId;
 
-    for (let i = 0; i < addresses.length; i++) {
-        let obj = addresses[i];
-    
-        if (addressId.indexOf(obj.id) !== -1) {
-            addresses.splice(i, 1);
+    Address.deleteOne({_id: addressId}, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfully deleted address.");
+            res.redirect("/");
         }
-    }
+    });
 
-    res.redirect("/");
+});
+
+app.post("/add-address", function(req, res) {
+    res.render("add-address");
 });
 
 

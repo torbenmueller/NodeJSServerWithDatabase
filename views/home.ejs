@@ -9,21 +9,22 @@
             </div>
             <p class="mb-1">Press "Add Address" to create a new entry.</p>
         </a>
-        <% addressList.forEach (element => { %>
+        <% addresses.forEach (element => { %>
         <form action="/delete" method="post">
             <a class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1 my-auto"><%= element.name + ", " + element.phone%></h5>
-                    <button type="button" class="btn btn-link" onClick="this.form.submit(value)"><i class="fas fa-trash-alt"></i></button>
+                    <button type="submit" class="btn btn-link" name="addressId" value="<%=element._id%>"><i class="fas fa-trash-alt"></i></button>
                 </div>
             </a>
-            <input type="hidden" name="addressId" value="<%= element.id %>"></input>
         </form>
         <% }); %>
     </div>
 
-    <div class="row justify-content-center mt-5">
-        <a class="btn btn-success" href="/add-address" role="button">Add Address</a>
-    </div>
+    <form action="/add-address" method="post">
+        <div class="row justify-content-center mt-5">
+            <button class="btn btn-success" type="submit">Add Address</button>
+        </div>
+    </form>
 
 <%- include("footer") -%>
